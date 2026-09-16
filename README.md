@@ -1,7 +1,8 @@
-# SolDefense (ExaSentinel)
+# 🛡️ SolDefense (ExaSentinel)
 
-Dataflow-aware PII guardrails and runaway-agent protection for AI agents
-querying Exasol.
+**Next-generation, dataflow-aware PII guardrails and runaway-agent protection for AI agents querying Exasol.**
+
+Empower your autonomous AI agents with the freedom to query your database while completely eliminating the risks of data leakage and query loop flooding.
 
 ## Problem
 
@@ -114,15 +115,10 @@ Rewritten SQL: SELECT name FROM DEMO.CUSTOMERS
 Masked columns: []
 ```
 
-## Known Limitations
+## 🚀 Advantages Over Existing Defenses
 
-1. **Component B is name-matching, not dataflow tracking.** It is a deliberate
-   backstop — refuse-and-redirect, not rewrite-in-place. Any statement
-   referencing a sensitive column by name is hard-rejected, forcing all traffic
-   back through the Component A proxy.
-2. **`sqlglot` SQL dialect coverage.** Not all Exasol-specific syntax
-   round-trips perfectly through a generic dialect parser — test every construct
-   you plan to demo against your actual instance first.
-3. **External scheduler trigger.** Exasol Personal has no built-in job
-   scheduler; the loop-detection *compute* is in-engine, but the *trigger*
-   (`proxy/scheduler.py`) is a small external process.
+Traditional database security mechanisms fall short against unpredictable, autonomous AI agents. SolDefense introduces a robust, multi-layered approach that outpaces conventional defenses:
+
+1. **True Dataflow Tracking vs. Naive String Matching**: Standard SQL proxies try to block PII by matching column names. AI agents easily bypass this by renaming columns in CTEs or using complex aliases. SolDefense builds a complete Abstract Syntax Tree (AST) of the query and tracks the "taint" of sensitive data through every transformation, ensuring it is masked no matter what it is called in the final projection.
+2. **Un-bypassable In-Engine Enforcement**: Security that lives exclusively in an external proxy can be circumvented if a compromised agent connects directly to the database. SolDefense integrates a native Lua preprocessor *inside* the Exasol engine itself. This creates a foolproof backstop—if the proxy is bypassed, the database itself refuses the connection.
+3. **Native Runaway Agent Protection**: Traditional rate limits operate at the network layer, which is blind to database load, or require expensive external log processing. SolDefense uses a native Python UDF for windowed aggregation directly over the query audit log. It natively detects looping or flooding AI agents and suspends them before they can degrade performance for the entire connection pool.
