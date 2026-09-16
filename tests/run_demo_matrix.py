@@ -47,7 +47,7 @@ RESULTS: list[tuple[int, str, str]] = []
 def record(num: int, description: str, passed: bool, detail: str = "") -> None:
     status = "PASS" if passed else "FAIL"
     RESULTS.append((num, description, status))
-    marker = "✓" if passed else "✗"
+    marker = "PASS" if passed else "FAIL"
     print(f"  [{marker}] Scenario {num}: {description} — {status}")
     if detail:
         print(f"       {detail}")
@@ -117,8 +117,9 @@ def scenario_4_cannot_disable_guard() -> None:
         )
         try:
             conn.execute("ALTER SESSION SET SQL_PREPROCESSOR_SCRIPT = NULL")
+            conn.execute("SELECT ssn FROM demo.customers")
             record(4, "Agent cannot disable guard", False,
-                   "ALTER SESSION succeeded — guard CAN be disabled")
+                   "SELECT succeeded — agent bypassed guard and accessed PII!")
         except pyexasol.exceptions.ExaQueryError as exc:
             record(4, "Agent cannot disable guard", True,
                    f"Denied: {str(exc).splitlines()[0]}")
@@ -193,7 +194,7 @@ if __name__ == "__main__":
     print("=" * 60)
     all_pass = True
     for num, desc, status in RESULTS:
-        marker = "✓" if status == "PASS" else "✗"
+        marker = "PASS" if status == "PASS" else "FAIL"
         print(f"  [{marker}] {num}. {desc}: {status}")
         if status != "PASS":
             all_pass = False

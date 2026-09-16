@@ -91,6 +91,29 @@ All 5 scenarios should print `PASS`:
 python demo_taint.py
 ```
 
+**Output:**
+```text
+============================================================
+TEST 1: Simple column
+Rewritten SQL: SELECT '***-**-****' AS SSN FROM DEMO.CUSTOMERS
+Masked columns: ['SSN']
+
+============================================================
+TEST 2: Alias disguise (ssn AS secret_id)
+Rewritten SQL: SELECT '***-**-****' AS SECRET_ID FROM DEMO.CUSTOMERS
+Masked columns: ['SECRET_ID']
+
+============================================================
+TEST 3: Sneaky CTE attack
+Rewritten SQL: WITH secret AS (SELECT ssn AS code FROM DEMO.CUSTOMERS) SELECT '***-**-****' AS CODE FROM secret
+Masked columns: ['CODE']
+
+============================================================
+TEST 4: Safe column (name) - should NOT be masked
+Rewritten SQL: SELECT name FROM DEMO.CUSTOMERS
+Masked columns: []
+```
+
 ## Known Limitations
 
 1. **Component B is name-matching, not dataflow tracking.** It is a deliberate

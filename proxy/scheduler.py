@@ -37,7 +37,7 @@ SELECT
     'Loop detected: ' || repeat_count || ' near-duplicate queries in window',
     NULL
 FROM (
-    SELECT DEMO.LOOP_DETECTOR(5, 5)
+    SELECT DEMO.LOOP_DETECTOR(5, 5, agent_id, raw_sql)
     FROM (
         SELECT agent_id, raw_sql
         FROM   DEMO.QUERY_LOG

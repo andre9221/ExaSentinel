@@ -22,9 +22,9 @@ from pydantic import BaseModel
 import pyexasol
 from dotenv import load_dotenv
 
-from registry import load_sensitive_columns
-from taint_engine import TaintEngine
-from suspension_client import is_agent_suspended, log_query
+from proxy.registry import load_sensitive_columns
+from proxy.taint_engine import TaintEngine
+from proxy.suspension_client import is_agent_suspended, log_query
 
 load_dotenv()
 

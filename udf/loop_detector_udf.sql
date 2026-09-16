@@ -19,7 +19,9 @@
 
 CREATE OR REPLACE PYTHON3 SET SCRIPT DEMO.LOOP_DETECTOR (
     window_seconds    INT,
-    repeat_threshold  INT
+    repeat_threshold  INT,
+    agent_id          VARCHAR(100),
+    raw_sql           VARCHAR(2000000)
 ) EMITS (
     agent_id     VARCHAR(100),
     repeat_count INT,
@@ -33,6 +35,8 @@ def run(ctx):
 
     # Exasol streams matching rows into ctx one at a time within this
     # parallel UDF instance; we aggregate by agent_id within the group.
+    threshold = ctx.repeat_threshold if hasattr(ctx, "repeat_threshold") else 5
+    
     while True:
         agent    = ctx.agent_id
         sql_text = ctx.raw_sql
@@ -42,7 +46,6 @@ def run(ctx):
         if not ctx.next():
             break
 
-    threshold = ctx.repeat_threshold if hasattr(ctx, "repeat_threshold") else 5
     for agent, count in counts.items():
         if count >= threshold:
             ctx.emit(agent, count, samples[agent])

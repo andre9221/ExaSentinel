@@ -24,6 +24,9 @@ STANDARD_SQL_FILES = [
     "sql/03_roles_and_grants.sql",
     "sql/04_query_log_table.sql",
     "sql/05_suspended_agents_table.sql",
+]
+
+FINAL_SQL_FILES = [
     "sql/07_proxy_grants.sql",
 ]
 
@@ -102,6 +105,8 @@ def main() -> int:
             path = ROOT / rel
             if path.exists():
                 execute_script_sql(conn, path)
+        for rel in FINAL_SQL_FILES:
+            execute_standard_sql(conn, ROOT / rel)
     finally:
         conn.close()
 

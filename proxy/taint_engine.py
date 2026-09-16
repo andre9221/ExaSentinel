@@ -24,7 +24,7 @@ import sqlglot.expressions as exp
 
 # Lazy imports — only needed when conn is live (not during unit tests)
 try:
-    from registry import load_all_columns
+    from proxy.registry import load_all_columns
 except ImportError:
     load_all_columns = None  # type: ignore
 
