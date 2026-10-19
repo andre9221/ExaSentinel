@@ -1,4 +1,4 @@
-# 🛡️ SolDefense (ExaSentinel)
+#SolDefense (ExaSentinel)
 
 **Next-generation, dataflow-aware PII guardrails and runaway-agent protection for AI agents querying Exasol.**
 

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolDefense | Sentinel Dashboard</title>
+    <!-- Google Fonts for typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-elements">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+
+    <main class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="url(#gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#4facfe" />
+                            <stop offset="100%" stop-color="#00f2fe" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <h1>SolDefense <span>Sentinel</span></h1>
+            </div>
+            <div class="status-indicator">
+                <div class="dot active"></div>
+                <span>Engine Active</span>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <!-- Left Column: Input -->
+            <div class="panel input-panel">
+                <div class="panel-header">
+                    <h2>Query Interface</h2>
+                </div>
+                <div class="panel-content">
+                    <div class="form-group">
+                        <label for="agentId">Agent ID / Session Token</label>
+                        <input type="text" id="agentId" placeholder="e.g. agent_4093_gamma" value="agent_alpha" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="sqlQuery">SQL Statement</label>
+                        <textarea id="sqlQuery" placeholder="SELECT * FROM DEMO.CUSTOMERS" spellcheck="false">SELECT * FROM DEMO.CUSTOMERS</textarea>
+                    </div>
+                    <div class="actions">
+                        <button id="runBtn" class="btn primary-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                            Execute Query
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Outputs -->
+            <div class="panel results-panel">
+                <div class="panel-header">
+                    <h2>Security & Results</h2>
+                </div>
+                
+                <!-- Error State -->
+                <div id="errorBox" class="alert-box error hidden">
+                    <div class="alert-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    </div>
+                    <div class="alert-content">
+                        <h3>Access Denied</h3>
+                        <p id="errorMsg">Agent is suspended.</p>
+                    </div>
+                </div>
+
+                <div class="panel-content scrollable" id="resultsContent">
+                    <div class="empty-state">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                        <p>Submit a query to see security transformations and data.</p>
+                    </div>
+
+                    <!-- Populated by JS -->
+                    <div id="securityMetrics" class="hidden">
+                        <div class="metric-card taint-card">
+                            <span class="metric-label">Masked Columns Detected</span>
+                            <div class="tags" id="maskedTags"></div>
+                        </div>
+                        <div class="metric-card sql-card">
+                            <span class="metric-label">Safe Rewritten SQL (Passed to Engine)</span>
+                            <code id="rewrittenSql"></code>
+                        </div>
+
+                        <div class="data-table-container">
+                            <table id="dataTable">
+                                <thead>
+                                    <tr id="tableHead"></tr>
+                                </thead>
+                                <tbody id="tableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -18,6 +18,7 @@ import os
 import ssl
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import pyexasol
 from dotenv import load_dotenv
@@ -33,6 +34,14 @@ PROXY_USER  = os.getenv("PROXY_USER",  "PROXY_SERVICE_USER")
 PROXY_PW    = os.getenv("PROXY_PW",    "change_me_proxy_pw")
 
 app = FastAPI(title="SolDefense Proxy")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Adjust in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 conn = pyexasol.connect(
     dsn=EXASOL_HOST,
